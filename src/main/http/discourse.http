@@ -1,0 +1,11 @@
+###
+GET https://discourse.tbp.land/categories
+Accept: application/json
+Api-Key: {{api-key}}
+Api-Username: {{api-username}}
+
+###
+GET https://discourse.tbp.land/tags
+Accept: application/json
+Api-Key: {{api-key}}
+Api-Username: {{api-username}}
