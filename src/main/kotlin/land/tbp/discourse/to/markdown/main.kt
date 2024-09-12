@@ -1,6 +1,7 @@
 package land.tbp.discourse.to.markdown
 
 import com.sksamuel.hoplite.ConfigLoaderBuilder
+import com.sksamuel.hoplite.Constants.indent
 import com.sksamuel.hoplite.addResourceSource
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -53,28 +54,34 @@ val configuration = ConfigLoaderBuilder.default()
 
 suspend fun main() {
     val categoriesResponse = discourseRequest(client, "categories").body<CategoriesResponse>()
-//    println(categoriesResponse)
-
     val indent = "    "
 
     categoriesResponse.categoryList.categories.forEach { category ->
         println(category)
-        val topicsResponse = discourseRequest(client, "c", category.slug, category.id.toString()).body<CategoryTopicsResponse>()
-        println(topicsResponse.topicList.moreTopicsUrl)
-        topicsResponse.topicList.topics.forEach { topic ->
-            println(indent + topic)
+        val topicInfos = getTopicInfos(client, "c", category.slug, category.id.toString())
+        topicInfos.forEach { topicInfo ->
+            println(indent.repeat(1) + topicInfo)
+            val topicPostInfos = getTopicPostInfos(client, "t", topicInfo.id.toString())
         }
-
-        val topicsResponse2 = discourseRequest(client, topicsResponse.topicList.moreTopicsUrl!!).body<CategoryTopicsResponse>()
-        println(topicsResponse2.topicList.moreTopicsUrl)
-        topicsResponse2.topicList.topics.forEach { topic ->
-            println(indent + topic)
-        }
-        return
     }
 }
 
-suspend fun discourseRequest(client: HttpClient, vararg urls: String): HttpResponse {
+private suspend fun getTopicPostInfos(client: HttpClient, vararg urls: String): Any {
+    println(indent.repeat(1) + urls.joinToString())
+    val ti = discourseRequest(client, *urls).body<TopicPostsResponse>()
+    println(indent.repeat(2) + ti)
+    return ti
+}
+
+private suspend fun getTopicInfos(client: HttpClient, vararg urls: String): List<TopicInfo> {
+    if (urls.isEmpty()) return emptyList()
+
+    println(indent + urls.joinToString())
+    val topicsResponse = discourseRequest(client, *urls).body<CategoryTopicsResponse>()
+    return topicsResponse.topicList.topics + (topicsResponse.topicList.moreTopicsUrl?.let { getTopicInfos(client, it) } ?: emptyList())
+}
+
+private suspend fun discourseRequest(client: HttpClient, vararg urls: String): HttpResponse {
     return client.get(DISCOURSE_URL) {
         url {
             appendEncodedPathSegments(*urls)

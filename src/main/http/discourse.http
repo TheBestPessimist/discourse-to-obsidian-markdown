@@ -18,7 +18,7 @@ Api-Username: {{api-username}}
 
 
 ###
-GET https://discourse.tbp.land/t/4352
+GET https://discourse.tbp.land/t/4339
 Accept: application/json
 Api-Key: {{api-key}}
 Api-Username: {{api-username}}
@@ -26,7 +26,7 @@ Api-Username: {{api-username}}
 
 
 ###
-GET https://discourse.tbp.land/posts/5493
+GET https://discourse.tbp.land/posts/5452
 Accept: application/json
 Api-Key: {{api-key}}
 Api-Username: {{api-username}}
