@@ -9,3 +9,24 @@ GET https://discourse.tbp.land/tags
 Accept: application/json
 Api-Key: {{api-key}}
 Api-Username: {{api-username}}
+
+###
+GET https://discourse.tbp.land/c/a-shadow-of-the-day/206
+Accept: application/json
+Api-Key: {{api-key}}
+Api-Username: {{api-username}}
+
+
+###
+GET https://discourse.tbp.land/t/4352
+Accept: application/json
+Api-Key: {{api-key}}
+Api-Username: {{api-username}}
+
+
+
+###
+GET https://discourse.tbp.land/posts/5493
+Accept: application/json
+Api-Key: {{api-key}}
+Api-Username: {{api-username}}

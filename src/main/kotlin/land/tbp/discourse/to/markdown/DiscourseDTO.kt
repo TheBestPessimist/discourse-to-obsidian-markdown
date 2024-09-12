@@ -14,8 +14,26 @@ data class CategoryList(val categories: List<Category>) {
 
 @Serializable
 data class Category(
-    val name: String,
+    val id: Int,
     val slug: String,
+    val name: String,
     val topicCount: Int,
     val postCount: Int,
+)
+
+///////////////////////
+
+@Serializable
+data class CategoryTopicsResponse(val topicList: TopicList)
+
+@Serializable
+data class TopicList(
+    val moreTopicsUrl: String?,
+    val topics: List<TopicInfo>,
+)
+@Serializable
+data class TopicInfo (
+    val id: Int,
+    val slug: String,
+    val title: String,
 )
