@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
@@ -19,6 +20,9 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines)
+
+    implementation(libs.base62)
 
     implementation(libs.hoplite)
 
