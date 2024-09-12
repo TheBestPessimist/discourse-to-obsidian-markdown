@@ -14,16 +14,24 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 
+
+private const val API_KEY = "Api-Key"
+private const val API_USERNAME = "Api-Username"
+
 @OptIn(ExperimentalSerializationApi::class)
 val objectMapper = Json {
     prettyPrint = true
     isLenient = false
     ignoreUnknownKeys = true
     namingStrategy = JsonNamingStrategy.SnakeCase
+    encodeDefaults = true
 }
 
 val client = HttpClient(CIO) {
-    install(Logging)
+    install(Logging) {
+        level = LogLevel.INFO
+        this.sanitizeHeader() { it in listOf(API_KEY, API_USERNAME) }
+    }
     install(ContentNegotiation) {
         json(objectMapper)
     }
@@ -39,13 +47,13 @@ val configuration = ConfigLoaderBuilder.default()
     .build()
     .loadConfigOrThrow<Configuration>()
 
+
 suspend fun main() {
     val response: HttpResponse = client.get("https://discourse.tbp.land/categories") {
         header(HttpHeaders.ContentType, "application/json")
         header(HttpHeaders.Accept, "application/json")
-        header("Api-Key", configuration.apiKey)
-        header("Api-Username", configuration.apiUsername)
+        header(API_KEY, configuration.apiKey)
+        header(API_USERNAME, configuration.apiUsername)
     }
-    println(response.bodyAsText())
     println(objectMapper.decodeFromString<CategoriesResponse>(response.bodyAsText()))
 }
