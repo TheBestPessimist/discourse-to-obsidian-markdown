@@ -42,3 +42,4 @@ bin/
 .DS_Store
 /src/main/resources/application-private.properties
 /src/main/http/http-client.private.env.json
+/zzzzzzzz.txt
