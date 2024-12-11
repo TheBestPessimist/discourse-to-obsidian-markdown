@@ -1,2 +1,1 @@
-rootProject.name = "discourse-to-markdown"
-
+rootProject.name = "discourse-to-obsidian-markdown"
