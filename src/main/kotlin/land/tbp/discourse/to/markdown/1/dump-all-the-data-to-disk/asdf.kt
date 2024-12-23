@@ -11,6 +11,7 @@ import land.tbp.discourse.to.markdown.discourseRequest
 import land.tbp.discourse.to.markdown.objectMapper
 import java.nio.file.Files
 import kotlin.io.path.Path
+import kotlin.system.exitProcess
 
 
 // todo this object should have a better location
@@ -18,7 +19,7 @@ object Dump {
     val Categories = Path("datadump/Categories.json")
     val CategoryTopics = Path("datadump/CategoryTopics.json")
     val TopicInfo = Path("datadump/TopicInfo.json")
-
+    val TopicPosts = Path("datadump/TopicPosts.json")
 }
 
 
@@ -30,6 +31,7 @@ fun main() {
     `1 dump all Categories`()
     `2 dump all CategoryTopics`()
     `3 dump all TopicInfo`()
+    `4 dump all TopicPosts`()
 
     runBlocking {
 
@@ -108,20 +110,58 @@ fun `3 dump all TopicInfo`() = runBlocking {
 
     val categoryTopics = objectMapper.decodeFromString<Map<Int, JsonArray>>(Files.readString(Dump.CategoryTopics))
     val allTopics = categoryTopics.values.flatten().mapNotNull { jsonElement: JsonElement ->
-
         val topicId = jsonElement.jsonObject["id"]?.jsonPrimitive?.int
         topicId
     }
         .sorted()
 
-    val map = allTopics.associate { id ->
-        val json = discourseRequest(client, "t", id.toString()).bodyAsText()
-        println("Topic: $id")
-        id to objectMapper.parseToJsonElement(json)
+    val map = allTopics.associate { topicId ->
+        val json = discourseRequest(client, "t", topicId.toString()).bodyAsText()
+        println("Topic: $topicId")
+        topicId to objectMapper.parseToJsonElement(json)
     }
     val json = objectMapper.encodeToString(map)
     Files.writeString(Dump.TopicInfo, json)
     println(Files.readString(Dump.TopicInfo))
+}
+
+fun `4 dump all TopicPosts`() = runBlocking {
+    println("4 dump all TopicPosts")
+    if (Files.exists(Dump.TopicPosts)) {
+        println("File already exists")
+        return@runBlocking
+    }
+
+    val topicInfo = objectMapper.decodeFromString<Map<Int, JsonElement>>(Files.readString(Dump.TopicInfo))
+    val topicPostsIds = topicInfo.asIterable()
+        .map { ti ->
+            val topicId = ti.key
+            val posts = ti.value.jsonObject["post_stream"]?.jsonObject["stream"]?.jsonArray?.map { it.jsonPrimitive.int } ?: emptyList()
+
+            topicId to posts
+        }
+
+    val s = topicPostsIds.map { it.second }.flatten().sorted()
+    println("total posts: " + topicPostsIds.sumOf { it.second.count() })
+    println(s.count())
+    println("flatten: ${s.toSet().count()}")
+
+    val topicPosts = topicPostsIds.associate { tpi ->
+        val topicId = tpi.first
+        val postIds = tpi.second
+
+        println("Topic: $topicId")
+        val posts = postIds.map {
+            println("   Post: $it")
+            val json = discourseRequest(client, "posts", it.toString()).bodyAsText()
+            objectMapper.parseToJsonElement(json)
+        }
+        topicId to posts
+    }
+
+    val json = objectMapper.encodeToString(topicPosts)
+    Files.writeString(Dump.TopicPosts, json)
+    println(Files.readString(Dump.TopicPosts))
 }
 
 
