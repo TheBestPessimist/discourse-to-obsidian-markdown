@@ -43,5 +43,4 @@ bin/
 /src/main/resources/application-private.properties
 /src/main/http/http-client.private.env.json
 /zzzzzzzz.txt
-/datadump/Categories.json
-/datadump/CategoryTopics.json
+/datadump/

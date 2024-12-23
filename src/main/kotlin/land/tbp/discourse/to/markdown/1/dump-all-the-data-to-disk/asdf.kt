@@ -17,6 +17,7 @@ import kotlin.io.path.Path
 object Dump {
     val Categories = Path("datadump/Categories.json")
     val CategoryTopics = Path("datadump/CategoryTopics.json")
+    val TopicInfo = Path("datadump/TopicInfo.json")
 
 }
 
@@ -28,6 +29,7 @@ object Dump {
 fun main() {
     `1 dump all Categories`()
     `2 dump all CategoryTopics`()
+    `3 dump all TopicInfo`()
 
     runBlocking {
 
@@ -70,8 +72,10 @@ fun main() {
 
 fun `1 dump all Categories`() = runBlocking {
     println("1 dump all Categories")
-    if (Files.exists(Dump.Categories))
+    if (Files.exists(Dump.Categories)) {
+        println("File already exists")
         return@runBlocking
+    }
 
     val categoriesResponse = discourseRequest(client, "categories").bodyAsText()
     Files.writeString(Dump.Categories, categoriesResponse)
@@ -80,13 +84,12 @@ fun `1 dump all Categories`() = runBlocking {
 
 fun `2 dump all CategoryTopics`() = runBlocking {
     println("2 dump all CategoryTopics")
+    if (Files.exists(Dump.CategoryTopics)) {
+        println("File already exists")
+        return@runBlocking
+    }
     val categories = objectMapper.decodeFromString<CategoriesResponse>(Files.readString(Dump.Categories))
     val map = categories.categoryList.categories.associate { category ->
-//        if (category.name != "Staff")
-//            return@map
-//        if (category.slug != "a-shadow-of-the-day") {
-//            return@associate category.id to buildJsonArray {  }
-//        }
 
         val categoryTopics = getCategoryTopics("c", category.slug, category.id.toString())
         category.id to categoryTopics
@@ -94,6 +97,31 @@ fun `2 dump all CategoryTopics`() = runBlocking {
     val json = objectMapper.encodeToString(map)
     Files.writeString(Dump.CategoryTopics, json)
     println(Files.readString(Dump.CategoryTopics))
+}
+
+fun `3 dump all TopicInfo`() = runBlocking {
+    println("3 dump all TopicInfo")
+    if (Files.exists(Dump.TopicInfo)) {
+        println("File already exists")
+        return@runBlocking
+    }
+
+    val categoryTopics = objectMapper.decodeFromString<Map<Int, JsonArray>>(Files.readString(Dump.CategoryTopics))
+    val allTopics = categoryTopics.values.flatten().mapNotNull { jsonElement: JsonElement ->
+
+        val topicId = jsonElement.jsonObject["id"]?.jsonPrimitive?.int
+        topicId
+    }
+        .sorted()
+
+    val map = allTopics.associate { id ->
+        val json = discourseRequest(client, "t", id.toString()).bodyAsText()
+        println("Topic: $id")
+        id to objectMapper.parseToJsonElement(json)
+    }
+    val json = objectMapper.encodeToString(map)
+    Files.writeString(Dump.TopicInfo, json)
+    println(Files.readString(Dump.TopicInfo))
 }
 
 
