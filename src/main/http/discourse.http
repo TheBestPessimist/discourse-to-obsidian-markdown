@@ -5,20 +5,20 @@ Api-Key: {{api-key}}
 Api-Username: {{api-username}}
 
 
-### All Categories
+### 1. All Categories
 GET https://discourse.tbp.land/categories
 Accept: application/json
 Api-Key: {{api-key}}
 Api-Username: {{api-username}}
 
-### Paginated All Topics per Category (CategoryTopics)
+### 2. Paginated All Topics per Category (CategoryTopics)
 GET https://discourse.tbp.land/c/a-shadow-of-the-day/206
 Accept: application/json
 Api-Key: {{api-key}}
 Api-Username: {{api-username}}
 
 
-###
+### 3. TopicInfo
 GET https://discourse.tbp.land/t/4333
 Accept: application/json
 Api-Key: {{api-key}}
@@ -26,7 +26,7 @@ Api-Username: {{api-username}}
 
 
 
-###
+### 4. Topic Posts
 GET https://discourse.tbp.land/posts/5434
 Accept: application/json
 Api-Key: {{api-key}}
