@@ -44,3 +44,4 @@ bin/
 /src/main/http/http-client.private.env.json
 /zzzzzzzz.txt
 /datadump/
+.aider*
