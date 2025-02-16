@@ -21,7 +21,6 @@ import java.nio.file.Files
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.Path
-import kotlin.system.exitProcess
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -91,15 +90,16 @@ fun main() {
 //            if (category.name!="Blog")
 //            if (category.name!="Discourse Testing")
 //            if (category.name!="Site Feedback/Meta")
-            if (category.name!="Staff")
+//            if (category.name != "Staff")
 //            if (category.name!="Lounge")
 //            if (category.name!="A Shadow of the Day...")
 //            if (category.name!="The Mighty Nahsuc's Song Of The Day")
 //            if (category.name!="pokambrian category")
-                continue
-            launch {
+//                continue
+//            launch {
                 println(category)
                 val topicInfos = getTopicInfos(client, "c", category.slug, category.id.toString())
+                println(topicInfos.size)
                 topicInfos.forEach { topicInfo ->
                     launch {
                         println(indent.repeat(1) + topicInfo)
@@ -118,7 +118,7 @@ fun main() {
                         allTopics.add(topic)
                     }
                 }
-            }
+//            }
         }
     }
     println("ZZZZZZZZZZZZZZZZ" + topicCount.get())
@@ -136,7 +136,7 @@ private suspend fun getTopicPostInfos(client: HttpClient, vararg urls: String): 
     return ti
 }
 
-private suspend fun getTopicInfos(client: HttpClient, vararg urls: String): List<TopicInfo> {
+suspend fun getTopicInfos(client: HttpClient, vararg urls: String): List<TopicInfo> {
     if (urls.isEmpty()) return emptyList()
 
     println(indent + urls.joinToString())
@@ -144,7 +144,7 @@ private suspend fun getTopicInfos(client: HttpClient, vararg urls: String): List
     return topicsResponse.topicList.topics + (topicsResponse.topicList.moreTopicsUrl?.let { getTopicInfos(client, it) } ?: emptyList())
 }
 
-private suspend fun discourseRequest(client: HttpClient, vararg urls: String): HttpResponse {
+suspend fun discourseRequest(client: HttpClient, vararg urls: String): HttpResponse {
     return client.get(DISCOURSE_URL) {
         url {
             appendEncodedPathSegments(*urls)
