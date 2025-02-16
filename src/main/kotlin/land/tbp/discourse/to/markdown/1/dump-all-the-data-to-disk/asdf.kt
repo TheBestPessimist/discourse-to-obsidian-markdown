@@ -11,8 +11,6 @@ import land.tbp.discourse.to.markdown.discourseRequest
 import land.tbp.discourse.to.markdown.objectMapper
 import java.nio.file.Files
 import kotlin.io.path.Path
-import kotlin.system.exitProcess
-
 
 // todo this object should have a better location
 object Dump {
@@ -28,10 +26,10 @@ object Dump {
  */
 
 fun main() {
-    `1 dump all Categories`()
-    `2 dump all CategoryTopics`()
-    `3 dump all TopicInfo`()
-    `4 dump all TopicPosts`()
+    `1 dumpAllCategories`()
+    `2 dumpAllCategoryTopics`()
+    `3 dumpAllTopicInfo`()
+    `4 dumpAllTopicPosts`()
 
     runBlocking {
 
@@ -72,7 +70,7 @@ fun main() {
     }
 }
 
-fun `1 dump all Categories`() = runBlocking {
+fun `1 dumpAllCategories`() = runBlocking {
     println("1 dump all Categories")
     if (Files.exists(Dump.Categories)) {
         println("File already exists")
@@ -84,7 +82,7 @@ fun `1 dump all Categories`() = runBlocking {
     println(Files.readString(Dump.Categories))
 }
 
-fun `2 dump all CategoryTopics`() = runBlocking {
+fun `2 dumpAllCategoryTopics`() = runBlocking {
     println("2 dump all CategoryTopics")
     if (Files.exists(Dump.CategoryTopics)) {
         println("File already exists")
@@ -101,7 +99,7 @@ fun `2 dump all CategoryTopics`() = runBlocking {
     println(Files.readString(Dump.CategoryTopics))
 }
 
-fun `3 dump all TopicInfo`() = runBlocking {
+fun `3 dumpAllTopicInfo`() = runBlocking {
     println("3 dump all TopicInfo")
     if (Files.exists(Dump.TopicInfo)) {
         println("File already exists")
@@ -125,7 +123,7 @@ fun `3 dump all TopicInfo`() = runBlocking {
     println(Files.readString(Dump.TopicInfo))
 }
 
-fun `4 dump all TopicPosts`() = runBlocking {
+fun `4 dumpAllTopicPosts`() = runBlocking {
     println("4 dump all TopicPosts")
     if (Files.exists(Dump.TopicPosts)) {
         println("File already exists")
