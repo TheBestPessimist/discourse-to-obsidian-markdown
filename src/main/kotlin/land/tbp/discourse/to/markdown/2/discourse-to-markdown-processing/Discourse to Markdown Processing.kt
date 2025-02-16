@@ -1,3 +1,7 @@
 package land.tbp.discourse.to.markdown.`2`.`discourse-to-markdown-processing`
 
-// read and deserialize using the available serialization library the files from the object `Dump` AI!
+
+// using the available serialization library,
+// read and deserialize the all files from the object `land.tbp.discourse.to.markdown.1.dump-all-data-to-disk.Dump`.
+// Don't do error checking, give me a simple and small class
+// AI!
