@@ -29,7 +29,7 @@ private const val DISCOURSE_API_USERNAME = "Api-Username"
 private const val DISCOURSE_URL = "https://discourse.tbp.land"
 
 @OptIn(ExperimentalSerializationApi::class)
-val objectMapper = Json {
+val json = Json {
     prettyPrint = true
     isLenient = false
     ignoreUnknownKeys = true
@@ -45,7 +45,7 @@ val client = HttpClient(CIO) {
         sanitizeHeader { it in listOf(DISCOURSE_API_KEY, DISCOURSE_API_USERNAME) }
     }
     install(ContentNegotiation) {
-        json(objectMapper)
+        json(json)
     }
     install(HttpRequestRetry) {
         maxRetries = 1000
