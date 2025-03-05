@@ -30,44 +30,6 @@ fun main() {
     `2 dumpAllCategoryTopics`()
     `3 dumpAllTopicInfo`()
     `4 dumpAllTopicPosts`()
-
-    runBlocking {
-
-
-//        for (category in categoriesResponse.categoryList.categories) {
-////            if (category.name!="Blog")
-////            if (category.name!="Discourse Testing")
-////            if (category.name!="Site Feedback/Meta")
-//            if (category.name!="Staff")
-////            if (category.name!="Lounge")
-////            if (category.name!="A Shadow of the Day...")
-////            if (category.name!="The Mighty Nahsuc's Song Of The Day")
-////            if (category.name!="pokambrian category")
-//                continue
-//            launch {
-//                println(category)
-//                val topicInfos = getTopicInfos(client, "c", category.slug, category.id.toString())
-//                topicInfos.forEach { topicInfo ->
-//                    launch {
-//                        println(indent.repeat(1) + topicInfo)
-//                        val topicPostInfos = getTopicPostInfos(client, "t", topicInfo.id.toString())
-//                        topicCount.incrementAndGet()
-//
-//                        val posts = coroutineScope {
-//                            topicPostInfos.postStream.stream.map { postId ->
-//                                async {
-//                                    val rawPost = discourseRequest(client, "posts", postId.toString()).body<PostResponse>().raw
-//                                    Post(rawPost, postId)
-//                                }
-//                            }.awaitAll()
-//                        }
-//                        val topic = Topic(category.name, emptyList(), topicInfo.title, topicInfo.slug, topicInfo.createdAt, posts.sortedBy { it.id }, emptyList())
-//                        allTopics.add(topic)
-//                    }
-//                }
-//            }
-//        }
-    }
 }
 
 fun `1 dumpAllCategories`() = runBlocking {
