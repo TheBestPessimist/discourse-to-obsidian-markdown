@@ -2,7 +2,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    alias (libs.plugins.kotlin.serialization)
 }
 
 
@@ -32,6 +32,13 @@ dependencies {
 
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    wrapper {
+        gradleVersion ="8.13"
+        distributionType = Wrapper.DistributionType.BIN
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }

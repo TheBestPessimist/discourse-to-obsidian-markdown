@@ -1,9 +1,10 @@
 [versions]
-ktor-version = "3.0.0-rc-1"
-kotlin-version = "2.0.20"
-logback-version = "1.4.14"
-hoplite-version = "2.7.5"
-coroutines-version = "1.9.0-RC.2"
+ktor-version = "3.1.1"
+kotlin-version = "2.1.10"
+logback-version = "1.5.17"
+hoplite-version = "2.9.0"
+coroutines-version = "1.10.1"
+kotlin-serialization-version = "2.0.20"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
@@ -11,6 +12,7 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-vers
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-version" }
 ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-kotlinx-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-version" }
 base62 = { module = "io.seruco.encoding:base62", version = "0.1.3" }
 
@@ -19,5 +21,6 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 hoplite = { module = "com.sksamuel.hoplite:hoplite-core", version.ref = "hoplite-version" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor-version" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization-version" }
