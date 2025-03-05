@@ -1,4 +1,4 @@
-package land.tbp.discourse.to.markdown.`1`.`dump-all-data-to-disk`
+package land.tbp.discourse.to.markdown.processing
 
 import io.seruco.encoding.base62.Base62
 

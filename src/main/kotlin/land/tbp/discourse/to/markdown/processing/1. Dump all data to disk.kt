@@ -1,17 +1,12 @@
-package land.tbp.discourse.to.markdown.`1`.`dump-all-data-to-disk`
+package land.tbp.discourse.to.markdown.processing
 
 import com.sksamuel.hoplite.Constants.indent
 import io.ktor.client.statement.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
-import land.tbp.discourse.to.markdown.CategoriesResponse
-import land.tbp.discourse.to.markdown.Dump
-import land.tbp.discourse.to.markdown.client
-import land.tbp.discourse.to.markdown.discourseRequest
-import land.tbp.discourse.to.markdown.json
+import land.tbp.discourse.to.markdown.*
 import java.nio.file.Files
-import kotlin.io.path.Path
 
 
 /*

@@ -1,13 +1,9 @@
-package land.tbp.discourse.to.markdown.`1`.`dump-all-data-to-disk`
+package land.tbp.discourse.to.markdown.processing
 
 import kotlinx.serialization.json.JsonElement
-import land.tbp.discourse.to.markdown.CategoriesResponse
-import land.tbp.discourse.to.markdown.CategoryTopicsResponse
-import land.tbp.discourse.to.markdown.Dump
-import land.tbp.discourse.to.markdown.Topic
-import land.tbp.discourse.to.markdown.json
+import land.tbp.discourse.to.markdown.*
 import java.nio.file.Files
-import java.util.Collections
+import java.util.*
 import kotlin.io.path.Path
 
 class DumpReader {
