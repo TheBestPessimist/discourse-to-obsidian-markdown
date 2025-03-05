@@ -20,7 +20,9 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.kotlinx.serialization.json)
+
     implementation(libs.kotlinx.coroutines)
+    // implementation(libs.kotlinx.serialization)
 
     implementation(libs.base62)
 

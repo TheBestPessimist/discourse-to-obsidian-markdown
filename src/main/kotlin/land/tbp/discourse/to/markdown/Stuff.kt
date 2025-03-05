@@ -1,6 +1,7 @@
 package land.tbp.discourse.to.markdown
 
 import com.sksamuel.hoplite.ConfigLoaderBuilder
+import com.sksamuel.hoplite.ExperimentalHoplite
 import com.sksamuel.hoplite.addResourceSource
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -10,7 +11,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
@@ -36,7 +37,7 @@ val client = HttpClient(CIO) {
         sanitizeHeader { it in listOf(DISCOURSE_API_KEY, DISCOURSE_API_USERNAME) }
     }
     install(ContentNegotiation) {
-        json(json)
+            json
     }
     install(HttpRequestRetry) {
         maxRetries = 1000
@@ -82,7 +83,9 @@ data class Configuration(
     val apiUsername: String,
 )
 
+@OptIn(ExperimentalHoplite::class)
 val configuration = ConfigLoaderBuilder.default()
+    .withExplicitSealedTypes()
     .addResourceSource("/application-private.properties")
     .build()
     .loadConfigOrThrow<Configuration>()
