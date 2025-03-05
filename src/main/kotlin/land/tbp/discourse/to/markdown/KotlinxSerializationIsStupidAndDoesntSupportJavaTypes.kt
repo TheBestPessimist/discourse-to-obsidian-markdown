@@ -16,7 +16,7 @@ import java.time.Instant
  * A convenience function for creating a [ToStringSerializer] whose name is derived from the class name.
  */
 inline fun <reified T : Any> toStringSerializer(noinline create: (String) -> T): ToStringSerializer<T> =
-    ToStringSerializer(T::class.java.name, create)
+    ToStringSerializer(T::class.qualifiedName!!, create)
 
 /**
  * A serializer with the given serial name that uses [Any] instance's [toString] function for serialization and the
@@ -41,4 +41,7 @@ object FileSerializer : KSerializer<File> by toStringSerializer(::File)
 object URISerializer : KSerializer<URI> by toStringSerializer(::URI)
 
 
+/**
+ * Use with `@Serializable(with = InstantSerializer::class)`
+ */
 object InstantSerializer : KSerializer<Instant> by toStringSerializer({ Instant.parse(it) })

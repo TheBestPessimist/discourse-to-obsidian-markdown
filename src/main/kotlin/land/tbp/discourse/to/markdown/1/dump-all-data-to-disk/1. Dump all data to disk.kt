@@ -6,25 +6,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import land.tbp.discourse.to.markdown.CategoriesResponse
+import land.tbp.discourse.to.markdown.Dump
 import land.tbp.discourse.to.markdown.client
 import land.tbp.discourse.to.markdown.discourseRequest
 import land.tbp.discourse.to.markdown.json
 import java.nio.file.Files
 import kotlin.io.path.Path
 
-// todo this object should have a better location
-object Dump {
-    val Categories = Path("datadump/Categories.json")
-    val CategoryTopics = Path("datadump/CategoryTopics.json")
-    val TopicInfo = Path("datadump/TopicInfo.json")
-    val TopicPosts = Path("datadump/TopicPosts.json")
-}
-
 
 /*
 1. Dump all categories
  */
-
 fun main() {
     `1 dumpAllCategories`()
     `2 dumpAllCategoryTopics`()
