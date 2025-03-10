@@ -15,7 +15,7 @@ data class Topic(
     // https://discourse.tbp.land/t/all-tomorrows-a-billion-year-chronicle-of-the-myriad-species-and-varying-fortunes-of-man-nemo-ramjet/25
     // so that my linking history is not lost!
     // basically, i should make it such that all posts inside my discourse are available under the **same** address in the future
-    val slugs: List<String>,
+    // val slugs: List<String>,
 )
 
 

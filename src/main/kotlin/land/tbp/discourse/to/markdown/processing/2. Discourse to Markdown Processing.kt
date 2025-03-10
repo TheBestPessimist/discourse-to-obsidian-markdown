@@ -1,36 +1,91 @@
 package land.tbp.discourse.to.markdown.processing
 
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.*
 import land.tbp.discourse.to.markdown.*
 import java.nio.file.Files
-import java.util.*
-import kotlin.io.path.Path
+import java.time.Instant
 
 class DumpReader {
-    fun readCategories(): CategoriesResponse {
-        return json.decodeFromString(Files.readString(Dump.Categories))
-    }
+    companion object {
+        // this file is useless
+        fun categories(): CategoriesResponse {
+            return json.decodeFromString(Files.readString(Dump.Categories))
+        }
 
-    fun readCategoryTopics(): Map<Int, CategoryTopicsResponse> {
-        return json.decodeFromString(Files.readString(Dump.CategoryTopics))
-    }
+        // this file also feels useless
+        fun categoryTopics(): Map<Int, CategoryTopicsResponse> {
+            return json.decodeFromString(Files.readString(Dump.CategoryTopics))
+        }
 
-    fun readTopicInfo(): Map<Int, JsonElement> {
-        return json.decodeFromString(Files.readString(Dump.TopicInfo))
-    }
+        fun topicInfo(): Map<Int, JsonElement> {
+            return json.decodeFromString(Files.readString(Dump.TopicInfo))
+        }
 
-    fun readTopicPosts(): Map<Int, List<JsonElement>> {
-        return json.decodeFromString(Files.readString(Dump.TopicPosts))
+        fun topicPosts(): Map<Int, List<JsonElement>> {
+            return json.decodeFromString(Files.readString(Dump.TopicPosts))
+        }
     }
 }
 
 fun main() {
-    val allTopics: MutableList<Topic> = Collections.synchronizedList(mutableListOf<Topic>())
+    /*
+    topic
+    - has list of posts
+    - belongs to category
+    - has a list of tags
+     */
+    val topics = buildList<Topic> {
 
-    val topic = Topic(category.name, emptyList(), topicInfo.title, topicInfo.slug, topicInfo.createdAt, posts.sortedBy { it.id }, emptyList())
-allTopics.add(topic)
 
-    println(allTopics.size)
-    val t = allTopics.sortedWith(compareBy({ it.categoryName }, { it.title }))
-    Files.writeString(Path("./zzzzzzzz.txt"), t.joinToString("\n".repeat(10)))
+        for ((id, jsonElem) in DumpReader.topicInfo()) {
+
+            if (id != 4692) continue
+
+            val categoryId = jsonElem.jsonObject["category_id"]?.jsonPrimitive?.int
+            val categoryName = DumpReader.categories().categoryList.categories.single { it.id == categoryId }.name
+            val tags = jsonElem.jsonObject["tags"]!!.jsonArray.map { it.jsonPrimitive.content }
+
+            val title = jsonElem.jsonObject["title"]!!.jsonPrimitive.content
+            // fancy title is the url encoded version. not needed
+            // val fancyTitle = jsonElem.jsonObject["fancy_title"]!!.jsonPrimitive.content
+
+            val slug = jsonElem.jsonObject["slug"]!!.jsonPrimitive.content
+            val createdAt = jsonElem.jsonObject["created_at"]!!.jsonPrimitive.content.let { Instant.parse(it) }
+
+            // todo imageURL, thumbnails might be interesting fields???
+
+            val fullUrl1 = "https://discourse.tbp.land/t/$id"
+            println(fullUrl1)
+
+            val fullUrl2 = "https://discourse.tbp.land/t/$slug/$id"
+            println(fullUrl2)
+
+            // val posts
+            //
+            // add(
+            //     Topic(
+            //         categoryName,
+            //         tags,
+            //         title,
+            //         slug,
+            //         createdAt,
+            //         posts,
+            //     )
+            // )
+        }
+    }
+
+
+    // DumpReader.topicInfo()[4678]
+    //     .also { println(it) }
+    //
+
+
+    // val allTopics: MutableList<Topic> = Collections.synchronizedList(mutableListOf<Topic>())
+    //     val topic = Topic(category.name, emptyList(), topicInfo.title, topicInfo.slug, topicInfo.createdAt, posts.sortedBy { it.id }, emptyList())
+    // allTopics.add(topic)
+    //
+    //     println(allTopics.size)
+    //     val t = allTopics.sortedWith(compareBy({ it.categoryName }, { it.title }))
+    //     Files.writeString(Path("./zzzzzzzz.txt"), t.joinToString("\n".repeat(10)))
 }

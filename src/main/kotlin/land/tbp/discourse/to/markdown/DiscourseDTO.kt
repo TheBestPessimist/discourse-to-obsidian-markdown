@@ -41,17 +41,3 @@ data class TopicInfo(
     @Serializable(with = InstantSerializer::class)
     val createdAt: Instant,
 )
-
-//////////////////////
-
-@Serializable
-data class TopicPostsResponse(
-    val postStream: PostStream,
-)
-
-@Serializable
-data class PostStream(
-    val stream: List<Int>,
-)
-
-/////
