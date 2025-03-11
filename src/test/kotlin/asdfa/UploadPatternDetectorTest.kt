@@ -130,4 +130,47 @@ class UploadPatternDetectorTest {
         assertThat(matches).hasSize(1)
         assertThat(matches[0].uploadId).isEqualTo("valid.jpg")
     }
+
+    @Test
+    fun `extract filename from various patterns`() {
+        val testCases = listOf(
+            Triple(
+                "![image|690x373](upload://qyPpXP8unp0viR8SyMnaOAeg0Q3.png)",
+                "image|690x373",
+                "image.png"
+            ),
+            Triple(
+                "![my awesome felsiget hand|666x200](upload://6LX9Y8dW88pEjXU4ufdLkTrkhc0.jpeg)",
+                "my awesome felsiget hand|666x200",
+                "my awesome felsiget hand.jpeg"
+            ),
+            Triple(
+                "![027c4d76e2cb8fe659cc0889df8877103c8e62e6.jpg](upload://9nonJ7JqWrGNRsfCh8bvBFNJX5z.jpeg)",
+                "027c4d76e2cb8fe659cc0889df8877103c8e62e6.jpg",
+                "027c4d76e2cb8fe659cc0889df8877103c8e62e6.jpeg"
+            ),
+            Triple(
+                "![youneverstoplovingsomeone-1-1.png](upload://vGnLh8KScIOro4iklzZxMI2yykB.png)",
+                "youneverstoplovingsomeone-1-1.png",
+                "youneverstoplovingsomeone-1-1.png"
+            ),
+            Triple(
+                "![MediaMoneky 5 sort issue|690x373](upload://rhcwLkdGyLq9hYd2CBn2I2uerRc.gif)",
+                "MediaMoneky 5 sort issue|690x373",
+                "MediaMoneky 5 sort issue.gif"
+            ),
+            Triple(
+                "![fd9a9a7f3aaf35d3b0e16c8db82ff082f86498ae](upload://biZj1mMEVcVNJE7EoQOKZi0sIkm.)",
+                "fd9a9a7f3aaf35d3b0e16c8db82ff082f86498ae",
+                "fd9a9a7f3aaf35d3b0e16c8db82ff082f86498ae"
+            )
+        )
+
+        testCases.forEach { (input, expectedAltText, expectedFilename) ->
+            val matches = findUploadPatterns(input)
+            assertThat(matches).hasSize(1)
+            assertThat(matches[0].altText).isEqualTo(expectedAltText)
+            assertThat(matches[0].fileName).isEqualTo(expectedFilename)
+        }
+    }
 }
