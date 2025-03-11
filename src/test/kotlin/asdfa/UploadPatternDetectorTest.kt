@@ -6,7 +6,7 @@ class UploadPatternDetectorTest {
     fun `detect single image pattern`() {
         val input = "![simple image](upload://abc123.jpg)"
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].fullMatch).isEqualTo("![simple image](upload://abc123.jpg)")
@@ -21,7 +21,7 @@ class UploadPatternDetectorTest {
                 Second image: ![image2](upload://def456.png)
             """.trimIndent()
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(2)
         assertThat(matches[0].uploadId).isEqualTo("abc123.jpg")
@@ -32,7 +32,7 @@ class UploadPatternDetectorTest {
     fun `handle complex alt text with special characters`() {
         val input = """![Complex alt text with |, %, numbers 123, and symbols !@#$%^&*](upload://complex123.jpg)"""
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].altText)
@@ -45,7 +45,7 @@ class UploadPatternDetectorTest {
                 long description that
                 spans multiple lines](upload://multiline.jpg)"""
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].altText).contains("This is a very", "long description")
@@ -59,7 +59,7 @@ class UploadPatternDetectorTest {
                 ![another regular](http://example.com/pic.png)
             """.trimIndent()
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].uploadId).isEqualTo("abc123.jpg")
@@ -69,7 +69,7 @@ class UploadPatternDetectorTest {
     fun `handle empty alt text`() {
         val input = "![](upload://empty.jpg)"
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].altText).isEmpty()
@@ -84,7 +84,7 @@ class UploadPatternDetectorTest {
                 ![image|565x500, 50%](upload://v0spS0ZFbb3pbGlRYmjT5CFBIQ0.jpeg)
             """.trimIndent()
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(2)
         assertThat(matches[0].altText).isEqualTo("image|690x491, 50%")
@@ -101,7 +101,7 @@ class UploadPatternDetectorTest {
                 but no upload images
             """.trimIndent()
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).isEmpty()
     }
@@ -110,7 +110,7 @@ class UploadPatternDetectorTest {
     fun `handle special characters in upload ID`() {
         val input = "![test](upload://abc-123_456.jpg)"
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].uploadId).isEqualTo("abc-123_456.jpg")
@@ -125,7 +125,7 @@ class UploadPatternDetectorTest {
                 ![missing upload prefix](regular-link.jpg)
             """.trimIndent()
 
-        val matches = UploadPatternDetector.findUploadPatterns(input)
+        val matches = findUploadPatterns(input)
 
         assertThat(matches).hasSize(1)
         assertThat(matches[0].uploadId).isEqualTo("valid.jpg")
