@@ -7,23 +7,12 @@ import java.time.Instant
 
 class DumpReader {
     companion object {
-        // this file is useless
-        fun categories(): CategoriesResponse {
-            return json.decodeFromString(Files.readString(Dump.Categories))
-        }
+        val categories: CategoriesResponse by lazy { json.decodeFromString(Files.readString(Dump.Categories)) }
 
-        // this file also feels useless
-        fun categoryTopics(): Map<Int, CategoryTopicsResponse> {
-            return json.decodeFromString(Files.readString(Dump.CategoryTopics))
-        }
-
-        fun topicInfo(): Map<Int, JsonElement> {
-            return json.decodeFromString(Files.readString(Dump.TopicInfo))
-        }
-
-        fun topicPosts(): Map<Int, List<JsonElement>> {
-            return json.decodeFromString(Files.readString(Dump.TopicPosts))
-        }
+        // this file is useless for my purpose
+        val categoryTopics: Map<Int, CategoryTopicsResponse> by lazy { json.decodeFromString(Files.readString(Dump.CategoryTopics)) }
+        val topicInfo: Map<Int, JsonElement> by lazy { json.decodeFromString(Files.readString(Dump.TopicInfo)) }
+        val topicPosts: Map<Int, List<JsonElement>> by lazy { json.decodeFromString(Files.readString(Dump.TopicPosts)) }
     }
 }
 
@@ -35,11 +24,11 @@ fun main() {
     - has a list of tags
      */
     val topics = buildList {
-        for ((id, jsonElem) in DumpReader.topicInfo()) {
+        for ((id, jsonElem) in DumpReader.topicInfo) {
             // if (id != 4692) continue
 
             val categoryId = jsonElem.jsonObject["category_id"]?.jsonPrimitive?.int
-            val categoryName = DumpReader.categories().categoryList.categories.single { it.id == categoryId }.name
+            val categoryName = DumpReader.categories.categoryList.categories.single { it.id == categoryId }.name
             val tags = jsonElem.jsonObject["tags"]!!.jsonArray.map { it.jsonPrimitive.content }
             val title = jsonElem.jsonObject["title"]!!.jsonPrimitive.content
             // fancy title is the url encoded version. not needed
@@ -73,7 +62,7 @@ fun main() {
 
 private fun getPosts(id: Int, jsonElem: JsonElement): List<Post> {
     val postIds = jsonElem.jsonObject["post_stream"]!!.jsonObject["stream"]!!.jsonArray.map { it.jsonPrimitive.int }
-    val topicPosts = DumpReader.topicPosts()[id]!!
+    val topicPosts = DumpReader.topicPosts[id]!!
     val posts = postIds.map { postId ->
         val post = topicPosts.single { it.jsonObject["id"]!!.jsonPrimitive.int == postId }.jsonObject
         val raw = post["raw"]!!.jsonPrimitive.content
