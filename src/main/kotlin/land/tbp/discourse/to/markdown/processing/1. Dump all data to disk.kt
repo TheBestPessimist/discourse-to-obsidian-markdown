@@ -17,6 +17,7 @@ fun main() {
     `2 dumpAllCategoryTopics`()
     `3 dumpAllTopicInfo`()
     `4 dumpAllTopicPosts`()
+    // Download the `uploads` separately. This can be done by downloading a full backup with uploads, then taking the folder out from the .zip.
 }
 
 fun `1 dumpAllCategories`() = runBlocking {
