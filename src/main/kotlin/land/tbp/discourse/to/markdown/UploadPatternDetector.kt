@@ -1,3 +1,4 @@
+import land.tbp.discourse.to.markdown.UploadMatch
 import land.tbp.discourse.to.markdown.processing.base62Decode
 import java.util.regex.Pattern
 
@@ -32,54 +33,4 @@ fun findUploadPatterns(text: String): List<UploadMatch> {
     }
 
     return matches
-}
-
-data class UploadMatch(
-    val fullMatch: String,
-    val altText: String,
-    val uploadId: String,
-) {
-    val fileName: String by lazy {
-        // Get the extension from [uploadId]
-        val extension = when {
-            uploadId.endsWith(".") -> "" // Some uploadIds end with . and have no extension
-            uploadId.contains(".") -> uploadId.substringAfterLast(".")
-            else -> "" // No extension found
-        }
-
-        // Extract the base filename from [altText]
-        val baseFileName = when {
-            // If altText already contains a filename with extension, use it without the extension
-            altText.contains(".") && !altText.contains("|") ->
-                altText.substringBeforeLast(".")
-
-            // Handle cases with dimensions (e.g., "image|690x373" or "my file|123x456")
-            altText.contains("|") ->
-                altText.substringBefore("|").trim()
-
-            // If it's just a plain text without extension or dimensions, use it as is
-            else -> altText.trim()
-        }
-
-        // Combine filename and extension
-        if (extension.isNotEmpty()) "$baseFileName.$extension" else baseFileName
-    }
-
-    val uploadIdNameOnDisk: String by lazy {
-        // Get the extension from [uploadId]
-        val extension = when {
-            uploadId.endsWith(".") -> "" // Some uploadIds end with . and have no extension
-            uploadId.contains(".") -> uploadId.substringAfterLast(".")
-            else -> "" // No extension found
-        }
-
-        val hash = when {
-            uploadId.endsWith(".") -> uploadId // Some uploadIds end with . and have no extension
-            uploadId.contains(".") -> uploadId.substringBeforeLast(".")
-            else -> uploadId // No extension found
-        }
-
-        val uploadHashDecoded = base62Decode(hash)
-        "$uploadHashDecoded.$extension"
-    }
 }
