@@ -25,7 +25,7 @@ fun main() {
      */
     val topics = buildList {
         for ((id, jsonElem) in DumpReader.topicInfo) {
-            // if (id != 4692) continue
+            if (id != 4692) continue
 
             val categoryId = jsonElem.jsonObject["category_id"]?.jsonPrimitive?.int
             val categoryName = DumpReader.categories.categoryList.categories.single { it.id == categoryId }.name
@@ -44,11 +44,12 @@ fun main() {
             // todo imageURL, thumbnails might be interesting fields???
 
             val posts = getPosts(id, jsonElem)
+            val uploadUrls = getUploadUrls(posts)
             add(Topic(categoryName, tags, title, slug, createdAt, posts, fullUrls))
         }
     }
 
-    println(json.encodeToString(topics))
+    // println(json.encodeToString(topics))
 
 
     // val allTopics: MutableList<Topic> = Collections.synchronizedList(mutableListOf<Topic>())
@@ -58,6 +59,12 @@ fun main() {
     //     println(allTopics.size)
     //     val t = allTopics.sortedWith(compareBy({ it.categoryName }, { it.title }))
     //     Files.writeString(Path("./zzzzzzzz.txt"), t.joinToString("\n".repeat(10)))
+}
+
+private fun getUploadUrls(posts: List<Post>) {
+    posts.map { (rawMarkdown, _, _) ->
+        rawMarkdown.also { println(it); println(); println();println();println();println(); }
+    }
 }
 
 private fun getPosts(id: Int, jsonElem: JsonElement): List<Post> {
