@@ -1,12 +1,21 @@
 package land.tbp.discourse.to.markdown.processing
 
 import io.seruco.encoding.base62.Base62
+import java.sql.SQLOutput
 
 
 // this is how i convert the base62 hashes to the actual image hash url
-@OptIn(ExperimentalStdlibApi::class)
 fun main() {
+    println(base62Decode("6LX9Y8dW88pEjXU4ufdLkTrkhc0") == "2f78c1ac988dd200abdba00c2ef28678eb0650dc")
+    println(base62Decode("o3t8U3Df0Nrf0D2fcmX1PEDmTfJ") == "a89897c22b40a070068d7a395ab18e6a545197ab")
+}
+
+
+@OptIn(ExperimentalStdlibApi::class)
+fun base62Decode(uploadUrlHash: String): String {
     val b = Base62.createInstanceWithInvertedCharacterSet()
-    val d = b.decode("6LX9Y8dW88pEjXU4ufdLkTrkhc0".encodeToByteArray())
-    d.toHexString(HexFormat.Default).also { println(it) } // 37b7c679596e2d220a5a05d6ab8a7336e02f1817
+    val d = b.decode(uploadUrlHash.encodeToByteArray())
+    val decoded = d.toHexString(HexFormat.Default)
+    println(decoded)
+    return decoded
 }
