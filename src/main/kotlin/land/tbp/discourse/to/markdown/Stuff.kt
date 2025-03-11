@@ -25,7 +25,6 @@ object Dump {
     val TopicPosts = Path("datadump/TopicPosts.json")
 }
 
-
 private const val DISCOURSE_API_KEY = "Api-Key"
 private const val DISCOURSE_API_USERNAME = "Api-Username"
 private const val DISCOURSE_URL = "https://discourse.tbp.land"
