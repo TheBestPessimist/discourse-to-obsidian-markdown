@@ -1,5 +1,6 @@
 package land.tbp.discourse.to.markdown.processing
 
+import findUploadPatterns
 import kotlinx.serialization.json.*
 import land.tbp.discourse.to.markdown.*
 import java.nio.file.Files
@@ -41,13 +42,16 @@ fun main() {
             )
             val createdAt = jsonElem.jsonObject["created_at"]!!.jsonPrimitive.content.let { Instant.parse(it) }
 
-            // todo imageURL, thumbnails might be interesting fields???
-
             val posts = getPosts(id, jsonElem)
-            val uploadUrls = getUploadUrls(posts)
             add(Topic(categoryName, tags, title, slug, createdAt, posts, fullUrls))
         }
     }
+
+    // topics
+    //     .flatMap { topic -> getUploadUrls(topic.posts) }
+    //     .sortedBy { it.fullMatch }
+    //     .joinToString("\n")
+    //     .also { println(it) }
 
     // println(json.encodeToString(topics))
 
@@ -61,12 +65,6 @@ fun main() {
     //     Files.writeString(Path("./zzzzzzzz.txt"), t.joinToString("\n".repeat(10)))
 }
 
-private fun getUploadUrls(posts: List<Post>) {
-    posts.map { (rawMarkdown, _, _) ->
-        rawMarkdown.also { println(it); println(); println();println();println();println(); }
-    }
-}
-
 private fun getPosts(id: Int, jsonElem: JsonElement): List<Post> {
     val postIds = jsonElem.jsonObject["post_stream"]!!.jsonObject["stream"]!!.jsonArray.map { it.jsonPrimitive.int }
     val topicPosts = DumpReader.topicPosts[id]!!
@@ -74,10 +72,13 @@ private fun getPosts(id: Int, jsonElem: JsonElement): List<Post> {
         val post = topicPosts.single { it.jsonObject["id"]!!.jsonPrimitive.int == postId }.jsonObject
         val raw = post["raw"]!!.jsonPrimitive.content
         val createdAt = post["created_at"]!!.jsonPrimitive.content.let { Instant.parse(it) }
+        val uploadUrls = findUploadPatterns(raw)
+
         Post(
             raw,
             postId,
-            createdAt
+            createdAt,
+            uploadUrls
         )
     }
     return posts

@@ -28,7 +28,7 @@ data class Post(
 ) {
     val markdownWithImages: String by lazy {
         for (upload in uploadUrls) {
-            rawMarkdown.replace(upload.fullMatch, uploadUrls)
+            rawMarkdown.replace(upload.fullMatch, upload.uploadIdNameOnDisk)
         }
         ""
     }
@@ -81,6 +81,6 @@ data class UploadMatch(
         }
 
         val uploadHashDecoded = base62Decode(hash)
-        "datadump/uploads/$uploadHashDecoded.$extension"
+        "$uploadHashDecoded.$extension"
     }
 }
