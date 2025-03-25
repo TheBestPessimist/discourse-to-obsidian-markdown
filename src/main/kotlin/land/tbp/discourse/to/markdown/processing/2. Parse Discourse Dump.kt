@@ -26,7 +26,7 @@ fun main() {
      */
     val topics = buildList {
         for ((id, jsonElem) in DumpReader.topicInfo) {
-            if (id != 4692) continue
+            // if (id != 4692) continue
 
             val categoryId = jsonElem.jsonObject["category_id"]?.jsonPrimitive?.int
             val categoryName = DumpReader.categories.categoryList.categories.single { it.id == categoryId }.name
@@ -38,6 +38,7 @@ fun main() {
             val slug = jsonElem.jsonObject["slug"]!!.jsonPrimitive.content
             val fullUrls = listOf(
                 "https://discourse.tbp.land/t/$id",
+                "https://discourse.tbp.land/raw/$id",
                 "https://discourse.tbp.land/t/$slug/$id",
             )
             val createdAt = jsonElem.jsonObject["created_at"]!!.jsonPrimitive.content.let { Instant.parse(it) }
@@ -46,7 +47,8 @@ fun main() {
             add(Topic(categoryName, tags, title, slug, createdAt, posts, fullUrls))
         }
     }
-    println(json.encodeToString(topics))
+
+    migrateFilesAndUploads(topics)
 }
 
 private fun getPosts(id: Int, jsonElem: JsonElement): List<Post> {
