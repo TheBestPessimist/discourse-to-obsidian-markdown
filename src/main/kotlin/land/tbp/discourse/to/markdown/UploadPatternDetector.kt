@@ -1,5 +1,4 @@
-import land.tbp.discourse.to.markdown.UploadMatch
-import land.tbp.discourse.to.markdown.processing.base62Decode
+import land.tbp.discourse.to.markdown.UploadUrl
 import java.util.regex.Pattern
 
 // This pattern matches:
@@ -18,16 +17,16 @@ private val UPLOAD_PATTERN = Pattern.compile(
  * @param text The input text to search for patterns
  * @return List of UploadMatch objects containing the full match, alt text, and upload ID
  */
-fun findUploadPatterns(text: String): List<UploadMatch> {
-    val matches = mutableListOf<UploadMatch>()
+fun findUploadPatterns(text: String): List<UploadUrl> {
+    val matches = mutableListOf<UploadUrl>()
     val matcher = UPLOAD_PATTERN.matcher(text)
 
     while (matcher.find()) {
         matches.add(
-            UploadMatch(
+            UploadUrl(
                 fullMatch = matcher.group(0),
                 altText = matcher.group(1),
-                uploadId = matcher.group(2)
+                uploadId = matcher.group(2),
             )
         )
     }

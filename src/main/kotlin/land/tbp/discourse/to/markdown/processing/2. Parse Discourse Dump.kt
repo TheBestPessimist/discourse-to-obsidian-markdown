@@ -46,23 +46,7 @@ fun main() {
             add(Topic(categoryName, tags, title, slug, createdAt, posts, fullUrls))
         }
     }
-
-    // topics
-    //     .flatMap { topic -> getUploadUrls(topic.posts) }
-    //     .sortedBy { it.fullMatch }
-    //     .joinToString("\n")
-    //     .also { println(it) }
-
-    // println(json.encodeToString(topics))
-
-
-    // val allTopics: MutableList<Topic> = Collections.synchronizedList(mutableListOf<Topic>())
-    //     val topic = Topic(category.name, emptyList(), topicInfo.title, topicInfo.slug, topicInfo.createdAt, posts.sortedBy { it.id }, emptyList())
-    // allTopics.add(topic)
-    //
-    //     println(allTopics.size)
-    //     val t = allTopics.sortedWith(compareBy({ it.categoryName }, { it.title }))
-    //     Files.writeString(Path("./zzzzzzzz.txt"), t.joinToString("\n".repeat(10)))
+    println(json.encodeToString(topics))
 }
 
 private fun getPosts(id: Int, jsonElem: JsonElement): List<Post> {
