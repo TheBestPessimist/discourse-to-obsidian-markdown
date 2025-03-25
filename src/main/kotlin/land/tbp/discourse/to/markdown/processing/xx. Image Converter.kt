@@ -1,7 +1,6 @@
 package land.tbp.discourse.to.markdown.processing
 
 import io.seruco.encoding.base62.Base62
-import java.sql.SQLOutput
 
 
 // this is how i convert the base62 hashes to the actual image hash url
